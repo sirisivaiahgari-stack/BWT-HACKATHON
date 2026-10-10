@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports Tournament Manager</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#18263c;--text:#eef4ff;--muted:#9eb0ca;--green:#a3e635;--blue:#60a5fa;--red:#fb7185;--border:#293952}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#09111f,#101d31);color:var(--text)}
+header{padding:24px 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap}
+.brand{font-size:23px;font-weight:800}.brand span{color:var(--green)}header p{margin:6px 0 0;color:var(--muted);font-size:13px}
+.tag{border:1px solid #46602a;background:#243719;color:var(--green);padding:9px 13px;border-radius:20px;font-size:12px}
+main{max-width:1250px;margin:auto;padding:28px 5% 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+h1{font-size:clamp(27px,4vw,42px);margin:0 0 8px}.hero p{margin:0;color:var(--muted)}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;font-weight:700;background:var(--green);color:#17220b}button:hover{filter:brightness(1.08)}button.secondary{background:#263852;color:var(--text)}button.danger{background:#4a2430;color:#fecdd3}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:24px 0}
+.stat,.panel{background:rgba(18,29,48,.96);border:1px solid var(--border);border-radius:16px;padding:19px}
+.stat small{color:var(--muted)}.stat strong{display:block;font-size:30px;margin-top:10px}.stat .accent{color:var(--green)}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{margin-bottom:18px}.panel h2{font-size:18px;margin:0 0 16px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select{width:100%;min-width:0;background:#0c1627;color:var(--text);border:1px solid #344660;border-radius:8px;padding:11px;font:inherit}input::placeholder{color:#7f91aa}
+.form-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}.wide{grid-column:1/-1}
+.list{display:grid;gap:10px}.item{background:var(--panel2);padding:13px;border-radius:11px;display:flex;justify-content:space-between;gap:12px;align-items:center}.item strong{display:block}.sub{font-size:12px;color:var(--muted);margin-top:5px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{padding:7px 9px;font-size:12px}
+.pill{display:inline-block;font-size:11px;padding:5px 8px;border-radius:20px;background:#293b55;color:#cbdcff}.pill.done{background:#1e3b2c;color:#bbf7d0}.pill.live{background:#493719;color:#fde68a}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--border);font-size:13px}th{color:var(--muted);font-weight:600}.empty{color:var(--muted);font-size:13px;padding:12px 0}.note{color:var(--muted);font-size:12px;line-height:1.6}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:480px){.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:24px}.form-grid{grid-template-columns:1fr}.wide,.form-actions{grid-column:1}.item{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">🏆 ARENA<span>HQ</span></div><p>Sports Tournament Management System</p></div>
+  <div class="tag">● TOURNAMENT CONTROL CENTER</div>
+</header>
+<main>
+  <section class="hero">
+    <div><h1>Manage the game.<br><span style="color:var(--green)">Own the scoreboard.</span></h1><p>Teams, fixtures, live scores and standings — all in one place.</p></div>
+    <button onclick="loadDemo()">Load Demo Data</button>
+  </section>
+  <section class="stats">
+    <div class="stat"><small>REGISTERED TEAMS</small><strong class="accent" id="teamCount">0</strong></div>
+    <div class="stat"><small>PLAYERS</small><strong id="playerCount">0</strong></div>
+    <div class="stat"><small>TOTAL MATCHES</small><strong id="matchCount">0</strong></div>
+    <div class="stat"><small>COMPLETED</small><strong id="completedCount">0</strong></div>
+  </section>
+
+  <div class="layout">
+    <div>
+      <section class="panel">
+        <h2>＋ Register a Team</h2>
+        <form id="teamForm" class="form-grid">
+          <input id="teamName" placeholder="Team name" required>
+          <select id="teamSport" required><option value="">Select sport</option><option>Football</option><option>Cricket</option><option>Basketball</option><option>Volleyball</option><option>Badminton</option><option>Kabaddi</option></select>
+          <input id="teamCaptain" placeholder="Captain name" required>
+          <input id="teamCity" placeholder="City / College" required>
+          <div class="form-actions"><button type="submit">Add Team</button></div>
+        </form>
+      </section>
+      <section class="panel">
+        <h2>＋ Register a Player</h2>
+        <form id="playerForm" class="form-grid">
+          <input id="playerName" placeholder="Player full name" required>
+          <select id="playerTeam" required><option value="">Choose team</option></select>
+          <input id="playerAge" type="number" min="5" max="100" placeholder="Age" required>
+          <input id="playerRole" placeholder="Role (e.g. striker)" required>
+          <div class="form-actions"><button type="submit">Add Player</button></div>
+        </form>
+      </section>
+      <section class="panel">
+        <h2>＋ Schedule a Match</h2>
+        <form id="matchForm" class="form-grid">
+          <select id="homeTeam" required><option value="">Team A</option></select>
+          <select id="awayTeam" required><option value="">Team B</option></select>
+          <input id="matchDate" type="date" required>
+          <input id="matchVenue" placeholder="Venue" required>
+          <div class="form-actions"><button type="submit">Schedule Match</button></div>
+        </form>
+        <p class="note">Choose two different teams. Add scores from the match list after the game.</p>
+      </section>
+    </div>
+    <div>
+      <section class="panel"><h2>Registered Teams</h2><div id="teamsList" class="list"><div class="empty">No teams yet. Register your first team.</div></div></section>
+      <section class="panel"><h2>Player Roster</h2><div id="playersList" class="list"><div class="empty">No players registered yet.</div></div></section>
+    </div>
+  </div>
+  <section class="panel">
+    <h2>📅 Match Fixtures & Scoreboard</h2>
+    <div id="matchesList" class="list"><div class="empty">No matches scheduled yet.</div></div>
+  </section>
+  <section class="panel">
+    <h2>🥇 Tournament Standings</h2>
+    <div style="overflow-x:auto"><table><thead><tr><th>Rank</th><th>Team</th><th>Played</th><th>Won</th><th>Lost</th><th>Draw</th><th>Points</th></tr></thead><tbody id="standingsBody"><tr><td colspan="7" class="empty">Add teams and complete matches to calculate standings.</td></tr></tbody></table></div>
+  </section>
+  <p class="note">Hackathon prototype: data is stored in this browser using localStorage. This standalone HTML demo does not yet connect to MongoDB or provide secure login. See the Python starter below for a separate command-line version.</p>
+</main>
+<script>
+let teams = JSON.parse(localStorage.getItem('arena_teams') || '[]');
+let players = JSON.parse(localStorage.getItem('arena_players') || '[]');
+let matches = JSON.parse(localStorage.getItem('arena_matches') || '[]');
+const $ = id => document.getElementById(id);
+function save(){localStorage.setItem('arena_teams',JSON.stringify(teams));localStorage.setItem('arena_players',JSON.stringify(players));localStorage.setItem('arena_matches',JSON.stringify(matches));render();}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function teamName(id){let t=teams.find(x=>x.id===id);return t?t.name:'Deleted team';}
+function fillTeamOptions(){
+  const opts='<option value="">Choose team</option>'+teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  $('playerTeam').innerHTML=opts;
+  $('homeTeam').innerHTML='<option value="">Team A</option>'+teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  $('awayTeam').innerHTML='<option value="">Team B</option>'+teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+}
+function render(){
+  $('teamCount').textContent=teams.length;$('playerCount').textContent=players.length;$('matchCount').textContent=matches.length;$('completedCount').textContent=matches.filter(m=>m.status==='Completed').length;
+  fillTeamOptions();
+  $('teamsList').innerHTML=teams.length?teams.map(t=>`<div class="item"><div><strong>${esc(t.name)}</strong><div class="sub">${esc(t.sport)} · Captain: ${esc(t.captain)} · ${esc(t.city)}</div></div><div class="actions"><button class="danger" onclick="deleteTeam(${t.id})">Delete</button></div></div>`).join(''):'<div class="empty">No teams yet.</div>';
+  $('playersList').innerHTML=players.length?players.map(p=>`<div class="item"><div><strong>${esc(p.name)}</strong><div class="sub">${esc(teamName(p.teamId))} · Age ${p.age} · ${esc(p.role)}</div></div><div class="actions"><button class="danger" onclick="deletePlayer(${p.id})">Remove</button></div></div>`).join(''):'<div class="empty">No players registered yet.</div>';
+  $('matchesList').innerHTML=matches.length?matches.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(m=>`<div class="item"><div><strong>${esc(teamName(m.homeId))} <span style="color:var(--green)">${m.status==='Completed'?m.homeScore+' - '+m.awayScore:'vs'}</span> ${esc(teamName(m.awayId))}</strong><div class="sub">${esc(m.date)} · ${esc(m.venue)} · <span class="pill ${m.status==='Completed'?'done':''}">${m.status}</span></div></div><div class="actions">${m.status!=='Completed'?`<button onclick="enterScore(${m.id})">Enter Score</button>`:`<button class="secondary" onclick="editScore(${m.id})">Edit Score</button>`}<button class="danger" onclick="deleteMatch(${m.id})">Delete</button></div></div>`).join(''):'<div class="empty">No matches scheduled yet.</div>';
+  renderStandings();
+}
+function renderStandings(){
+  let rows=teams.map(t=>({id:t.id,name:t.name,played:0,won:0,lost:0,draw:0,points:0}));
+  matches.filter(m=>m.status==='Completed').forEach(m=>{let a=rows.find(x=>x.id===m.homeId),b=rows.find(x=>x.id===m.awayId);if(!a||!b)return;a.played++;b.played++;if(m.homeScore>m.awayScore){a.won++;a.points+=3;b.lost++;}else if(m.homeScore<m.awayScore){b.won++;b.points+=3;a.lost++;}else{a.draw++;b.draw++;a.points++;b.points++;}});
+  rows.sort((a,b)=>b.points-a.points||b.won-a.won||a.name.localeCompare(b.name));
+  $('standingsBody').innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${i+1}</td><td><strong>${esc(r.name)}</strong></td><td>${r.played}</td><td>${r.won}</td><td>${r.lost}</td><td>${r.draw}</td><td style="color:var(--green);font-weight:bold">${r.points}</td></tr>`).join(''):'<tr><td colspan="7" class="empty">No teams registered.</td></tr>';
+}
+$('teamForm').addEventListener('submit',e=>{e.preventDefault();teams.push({id:Date.now(),name:$('teamName').value.trim(),sport:$('teamSport').value,captain:$('teamCaptain').value.trim(),city:$('teamCity').value.trim()});e.target.reset();save();});
+$('playerForm').addEventListener('submit',e=>{e.preventDefault();if(!teams.length)return alert('Register a team first.');players.push({id:Date.now(),name:$('playerName').value.trim(),teamId:Number($('playerTeam').value),age:Number($('playerAge').value),role:$('playerRole').value.trim()});e.target.reset();save();});
+$('matchForm').addEventListener('submit',e=>{e.preventDefault();let h=Number($('homeTeam').value),a=Number($('awayTeam').value);if(h===a)return alert('Select two different teams.');matches.push({id:Date.now(),homeId:h,awayId:a,date:$('matchDate').value,venue:$('matchVenue').value.trim(),status:'Scheduled',homeScore:null,awayScore:null});e.target.reset();save();});
+function enterScore(id){let m=matches.find(x=>x.id===id);let h=prompt('Score for '+teamName(m.homeId));if(h===null)return;let a=prompt('Score for '+teamName(m.awayId));if(a===null)return;h=Number(h);a=Number(a);if(!Number.isFinite(h)||!Number.isFinite(a)||h<0||a<0||!Number.isInteger(h)||!Number.isInteger(a))return alert('Enter valid non-negative whole-number scores.');m.homeScore=h;m.awayScore=a;m.status='Completed';save();}
+function editScore(id){let m=matches.find(x=>x.id===id);enterScore(id);}
+function deleteTeam(id){if(!confirm('Delete this team and its players/matches?'))return;teams=teams.filter(t=>t.id!==id);players=players.filter(p=>p.teamId!==id);matches=matches.filter(m=>m.homeId!==id&&m.awayId!==id);save();}
+function deletePlayer(id){players=players.filter(p=>p.id!==id);save();}
+function deleteMatch(id){if(confirm('Delete this match?')){matches=matches.filter(m=>m.id!==id);save();}}
+function loadDemo(){
+ if(teams.length||players.length||matches.length){if(!confirm('Demo data will be added to your existing records. Continue?'))return;}
+ let x=Date.now();let a=x+1,b=x+2,c=x+3;
+ teams.push({id:a,name:'Thunder Strikers',sport:'Football',captain:'Arjun',city:'Hyderabad'},{id:b,name:'Blaze United',sport:'Football',captain:'Kiran',city:'Warangal'},{id:c,name:'Falcon Warriors',sport:'Football',captain:'Meera',city:'Vijayawada'});
+ players.push({id:x+4,name:'Ravi Kumar',teamId:a,age:20,role:'Forward'},{id:x+5,name:'Sana Reddy',teamId:b,age:21,role:'Defender'},{id:x+6,name:'Vikram Rao',teamId:c,age:19,role:'Goalkeeper'});
+ matches.push({id:x+7,homeId:a,awayId:b,date:new Date().toISOString().slice(0,10),venue:'Main Arena',status:'Completed',homeScore:2,awayScore:1},{id:x+8,homeId:b,awayId:c,date:new Date(Date.now()+86400000).toISOString().slice(0,10),venue:'College Ground',status:'Scheduled',homeScore:null,awayScore:null});save();
+}
+render();
+</script>
+</body>
+</html>
